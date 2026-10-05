@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jirac.jirac.entity.Atividade;
-import com.jirac.jirac.exceptions.*;
 import com.jirac.jirac.service.AtividadeService;
 
 import jakarta.validation.Valid;
@@ -30,30 +29,27 @@ public class AtividadeController {
     @ResponseStatus(HttpStatus.CREATED) 
     @PostMapping
     public void create(@Valid @RequestBody Atividade atividade)
-    throws CriacaoAtividadeFalhouGenericException
     {
            //return atividadeService.criar(atividade);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    
     @GetMapping
     public void list()
     {
            //return atividadeService.listar();
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    
     @GetMapping("/{id}")
     public void search(@PathVariable Long id)
-    throws BuscaAtividadeFalhouGenericException
     {
            //return atividadeService.buscar(id);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @Valid @RequestBody Atividade atividade)
-    throws AtualizarAtividadeFalhouGenericException
     {
         //return atividadeService.atualizar(id, atividade);
     } 
@@ -61,7 +57,6 @@ public class AtividadeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id)
-    throws DeletarAtividadeFalhouGenericException
     {
         //atividadeService.deletar(id);
     } 

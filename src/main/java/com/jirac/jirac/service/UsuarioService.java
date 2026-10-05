@@ -1,5 +1,6 @@
 package com.jirac.jirac.service;
 
+import com.jirac.jirac.entity.Usuario;
 import com.jirac.jirac.exceptions.CpfInvalidoException;
 import com.jirac.jirac.repository.UsuarioRepository;
 

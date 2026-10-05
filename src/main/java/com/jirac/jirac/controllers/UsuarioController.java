@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jirac.jirac.entity.Usuario;
-import com.jirac.jirac.exceptions.*;
 import com.jirac.jirac.service.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -30,30 +29,27 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.CREATED) 
     @PostMapping
     public void create(@Valid @RequestBody Usuario usuario)
-    throws CriacaoUsuarioFalhouGenericException
     {
-           //return usuarioService.criar(usuario);
+        //return usuarioService.criar(usuario);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    
     @GetMapping
     public void list()
     {
            //return usuarioService.listar();
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    
     @GetMapping("/{id}")
     public void search(@PathVariable Long id)
-    throws BuscaUsuarioFalhouGenericException
     {
            //return usuarioService.buscar(id);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @Valid @RequestBody Usuario usuario)
-    throws AtualizarUsuarioFalhouGenericException
     {
         //return usuarioService.atualizar(id, usuario);
     } 
@@ -61,7 +57,6 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id)
-    throws DeletarUsuarioFalhouGenericException
     {
         //usuarioService.deletar(id);
     } 
