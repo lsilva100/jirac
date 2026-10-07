@@ -1,5 +1,8 @@
 package com.jirac.jirac.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,49 +19,42 @@ import com.jirac.jirac.service.UsuarioService;
 
 import jakarta.validation.Valid;
 
-@RestController 
-@RequestMapping("/api/v1/usuarios") 
+@RestController
+@RequestMapping("/api/v1/usuarios")
 public class UsuarioController {
-    
+
     private final UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioService usuarioService){
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
-    @ResponseStatus(HttpStatus.CREATED) 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void create(@Valid @RequestBody Usuario usuario)
-    {
-        //return usuarioService.criar(usuario);
+    public Usuario create(@Valid @RequestBody Usuario usuario) {
+        return usuarioService.salvar(usuario);
     }
 
-    
     @GetMapping
-    public void list()
-    {
-           //return usuarioService.listar();
+    public List<Usuario> list() {
+        return usuarioService.listar();
     }
 
-    
     @GetMapping("/{id}")
-    public void search(@PathVariable Long id)
-    {
-           //return usuarioService.buscar(id);
+    public Optional<Usuario> search(@PathVariable Long id) {
+        return usuarioService.buscar(id);
     }
 
-    
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @Valid @RequestBody Usuario usuario)
-    {
-        //return usuarioService.atualizar(id, usuario);
-    } 
+    public Usuario update(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
+        usuario.setId(id);
+        return usuarioService.salvar(usuario);
+    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id)
-    {
-        //usuarioService.deletar(id);
-    } 
+    public void delete(@PathVariable Long id) {
+        usuarioService.apagar(id);
+    }
 
 }

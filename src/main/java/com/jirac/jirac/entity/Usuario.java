@@ -33,9 +33,11 @@ public class Usuario extends Auditoria {
     private LocalDate dataNascimento;
 
     @Email
+    @Column(unique = true)
     private String email;
 
     @Pattern(regexp = "^d{13}$")
+    @Column(unique = true)
     private String telefone;
 
     private Cargo cargo;
