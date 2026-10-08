@@ -1,5 +1,8 @@
 package com.jirac.jirac.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,49 +19,42 @@ import com.jirac.jirac.service.ProjetoService;
 
 import jakarta.validation.Valid;
 
-@RestController 
-@RequestMapping("/api/v1/projetos") 
+@RestController
+@RequestMapping("/api/v1/projetos")
 public class ProjetoController {
-    
+
     private final ProjetoService projetoService;
 
-    public ProjetoController(ProjetoService projetoService){
+    public ProjetoController(ProjetoService projetoService) {
         this.projetoService = projetoService;
     }
 
-    @ResponseStatus(HttpStatus.CREATED) 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void create(@Valid @RequestBody Projeto projeto)
-    {
-           //return projetoService.criar(projeto);
+    public Projeto create(@Valid @RequestBody Projeto projeto) {
+        return projetoService.salvar(projeto);
     }
 
-    
     @GetMapping
-    public void list()
-    {
-           //return projetoService.listar();
+    public List<Projeto> list() {
+        return projetoService.listar();
     }
 
-    
     @GetMapping("/{id}")
-    public void search(@PathVariable Long id)
-    {
-           //return projetoService.buscar(id);
+    public Optional<Projeto> search(@PathVariable Long id) {
+        return projetoService.buscar(id);
     }
 
-    
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @Valid @RequestBody Projeto projeto)
-    {
-        //return projetoService.atualizar(id, projeto);
-    } 
+    public Projeto update(@PathVariable Long id, @Valid @RequestBody Projeto projeto) {
+        projeto.setId(id);
+        return projetoService.salvar(projeto);
+    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id)
-    {
-        //projetoService.deletar(id);
-    } 
+    public void delete(@PathVariable Long id) {
+        projetoService.apagar(id);
+    }
 
 }

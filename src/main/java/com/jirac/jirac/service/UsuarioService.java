@@ -3,11 +3,14 @@ package com.jirac.jirac.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.jirac.jirac.entity.Usuario;
 import com.jirac.jirac.exceptions.CpfInvalidoException;
 import com.jirac.jirac.exceptions.UsuarioException;
 import com.jirac.jirac.repository.UsuarioRepository;
 
+@Service 
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
