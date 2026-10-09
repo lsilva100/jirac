@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.jirac.jirac.entity.Projeto;
 import com.jirac.jirac.repository.ProjetoRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProjetoService {
 
@@ -17,6 +19,7 @@ public class ProjetoService {
         this.projetoRepository = projetoRepository;
     }
 
+    @Transactional 
     public Projeto salvar(Projeto p) {
         return projetoRepository.save(p);
     }
