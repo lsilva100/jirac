@@ -18,10 +18,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor 
-@AllArgsConstructor 
-@Getter 
-@Setter 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Usuario extends Auditoria {
 
@@ -48,5 +48,16 @@ public class Usuario extends Auditoria {
     private String telefone;
 
     private Cargo cargo;
+
+    public Usuario(String nome,
+            @Length(min = 11, max = 11) String cpf, LocalDate dataNascimento, @Email String email,
+            @Pattern(regexp = "^d{13}$") String telefone, Cargo cargo) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.dataNascimento = dataNascimento;
+        this.email = email;
+        this.telefone = telefone;
+        this.cargo = cargo;
+    }
 
 }
