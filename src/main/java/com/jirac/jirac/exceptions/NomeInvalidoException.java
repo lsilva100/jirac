@@ -1,7 +1,11 @@
 package com.jirac.jirac.exceptions;
 
-public class NomeInvalidoException extends RuntimeException {
-    public NomeInvalidoException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+import org.springframework.web.ErrorResponseException;
+
+public class NomeInvalidoException extends ErrorResponseException {
+    public NomeInvalidoException(String nome) {
+        super(HttpStatus.BAD_REQUEST);
+        setDetail(nome + "pois possui menos que 3 letras");
     }
 }

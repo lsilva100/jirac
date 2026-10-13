@@ -1,7 +1,11 @@
 package com.jirac.jirac.exceptions;
 
-public class EmailInvalidoException extends RuntimeException {
-    public EmailInvalidoException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+import org.springframework.web.ErrorResponseException;
+
+public class EmailInvalidoException extends ErrorResponseException {
+    public EmailInvalidoException(String email) {
+        super(HttpStatus.BAD_REQUEST);
+        setDetail(email);
     }
 }
