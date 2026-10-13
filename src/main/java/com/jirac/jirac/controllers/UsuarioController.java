@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jirac.jirac.dtos.UsuarioEditarDto;
 import com.jirac.jirac.dtos.UsuarioLoginDto;
 import com.jirac.jirac.dtos.UsuarioMostrarDto;
 import com.jirac.jirac.entity.Usuario;
@@ -37,24 +38,23 @@ public class UsuarioController {
         return usuarioService.salvar(usuarioLoginDto);
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public List<Usuario> list() {
         return usuarioService.listar();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Usuario> search(@PathVariable Long id) {
+    @GetMapping("/listar/{id}")
+    public UsuarioMostrarDto search(@PathVariable Long id) {
         return usuarioService.buscar(id);
     }
 
-    // @PutMapping("/{id}")
-    // public Usuario update(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
-    //     usuario.setId(id);
-    //     return usuarioService.salvar(usuario);
-    // }
+    @PutMapping("/editar/{id}")
+    public UsuarioMostrarDto update(@PathVariable Long id, @Valid @RequestBody UsuarioEditarDto usuarioEditarDto) {
+        return usuarioService.editar(id, usuarioEditarDto);
+    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/apagar/{id}")
     public void delete(@PathVariable Long id) {
         usuarioService.apagar(id);
     }
