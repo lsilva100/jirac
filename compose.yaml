@@ -1,0 +1,31 @@
+# Local database for development and testing.
+# Start: docker compose up -d   |   Stop: docker compose down
+services:
+  postgres:
+    image: postgres:17
+    container_name: jirac-postgres
+    environment:
+      POSTGRES_DB: jirac
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123"
+    ports:
+      - "5432:5432"
+    volumes:
+      - jirac-pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: jirac-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@jirac.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - jirac-pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  jirac-pgdata:
+  jirac-pgadmin:
