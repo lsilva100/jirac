@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jirac.jirac.dtos.AtividadeCreateRequestDTO;
 import com.jirac.jirac.entity.Atividade;
 import com.jirac.jirac.service.AtividadeService;
 
@@ -31,8 +32,8 @@ public class AtividadeController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Atividade create(@Valid @RequestBody Atividade atividade) {
-        return atividadeService.salvar(atividade);
+    public Atividade create(@Valid @RequestBody AtividadeCreateRequestDTO atividadeDTO) {
+        return atividadeService.salvar(atividadeDTO);
     }
 
     @GetMapping
@@ -46,9 +47,9 @@ public class AtividadeController {
     }
 
     @PutMapping("/{id}")
-    public Atividade update(@PathVariable Long id, @Valid @RequestBody Atividade atividade) {
+    public void update(@PathVariable Long id, @Valid @RequestBody Atividade atividade) {
         atividade.setId(id);
-        return atividadeService.salvar(atividade);
+        //return atividadeService.salvar(atividade);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
