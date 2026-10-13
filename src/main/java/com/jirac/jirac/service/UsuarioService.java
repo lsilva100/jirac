@@ -5,12 +5,17 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.jirac.jirac.dtos.UsuarioLoginDto;
+import com.jirac.jirac.dtos.UsuarioMostrarDto;
 import com.jirac.jirac.entity.Usuario;
 import com.jirac.jirac.exceptions.CpfInvalidoException;
+import com.jirac.jirac.exceptions.EmailInvalidoException;
+import com.jirac.jirac.exceptions.NomeInvalidoException;
+import com.jirac.jirac.exceptions.TelefoneInvalidoException;
 import com.jirac.jirac.exceptions.UsuarioException;
 import com.jirac.jirac.repository.UsuarioRepository;
 
-@Service 
+@Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
@@ -18,11 +23,15 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Usuario salvar(Usuario usuario) {
+    public UsuarioMostrarDto salvar(UsuarioLoginDto u) {
+        Usuario usuario = new Usuario(u.getNome(), u.getCpf(), u.getNascimento(), u.getEmail(), u.getTelefone(),
+                u.getCargo());
         if (validarUsuario(usuario)) {
-            return usuarioRepository.save(usuario);
+            usuarioRepository.save(usuario);
+            return new UsuarioMostrarDto(usuario.getNome(), usuario.getDataNascimento(),
+                    usuario.getEmail(), usuario.getTelefone(), usuario.getCargo());
         }
-        throw new UsuarioException("Dados do usuários inválidos.");
+        throw new UsuarioException("Dados de usuário inválidos.");
     }
 
     public List<Usuario> listar() {
@@ -38,15 +47,20 @@ public class UsuarioService {
     }
 
     public boolean validarUsuario(Usuario usuario) {
-        if (validarNome(usuario.getNome()) && validarCpf(usuario.getCpf()) && validarEmail(usuario.getEmail())
-                && validarTelefone(usuario.getTelefone())) {
-            return true;
-        }
-        return false;
+        if (!validarNome(usuario.getNome()))
+            throw new NomeInvalidoException("Nome inválido.");
+        if (!validarCpf(usuario.getCpf()))
+            throw new CpfInvalidoException("CPF inválido.");
+        if (!validarEmail(usuario.getEmail()))
+            throw new EmailInvalidoException("E-mail inválido.");
+        if (!validarTelefone(usuario.getTelefone()))
+            throw new TelefoneInvalidoException("Telefone inválido.");
+
+        return true;
     }
 
     public boolean validarNome(String nome) {
-        return (((nome.trim().isBlank()) && (nome.trim().length() < 3)) ? false : true);
+        return nome.matches("[a-zA-Z]{3,}");
     }
 
     public boolean validarCpf(String cpf) {
@@ -54,20 +68,17 @@ public class UsuarioService {
     }
 
     public boolean validarEmail(String email) {
-        return email.matches("^\\w{6,20}@\\w{3,20}\\.\\w{2,5}$");
+        return email.matches("[A-Za-z0-9.]+@[A-Za-z0-9.]+\\.[A-Za-z]{2,4}");
     }
 
     public boolean validarTelefone(String telefone) {
-        return telefone.matches("^\\d{13}$");
+        return telefone.matches("[0-9]{13}");
     }
 
     public String limparCpf(String cpf) {
-        if (cpf.matches("^\\d{11}$")) {
-            return cpf;
-        }
-        cpf.replace(".", "");
-        cpf.replace("-", "");
-        if (cpf.matches("^\\d{11}$")) {
+        cpf = cpf.replaceAll("\\D", "");
+
+        if (cpf.matches("\\d{11}")) {
             return cpf;
         }
         throw new CpfInvalidoException("CPF inválido.");
@@ -75,27 +86,28 @@ public class UsuarioService {
 
     public boolean gerarDigitos(String cpf) {
         char[] valido = cpf.toCharArray();
-        int temp1 = ((int) valido[0]);
-        int d1 = temp1;
-        for (int i = 10; i < 2; i--) {
-            int temp3 = 1;
-            temp1 = valido[temp3] * i;
+        int d1 = 0;
+        int temp3 = 0;
+        int temp1 = 0;
+        for (int i = 10; i >= 2; i--) {
+            temp1 = Character.getNumericValue(valido[temp3]) * i;
             d1 += temp1;
             temp3++;
         }
-        d1 %= 11;
-
         temp1 = 0;
-        int d2 = d1 * 2;
-        for (int i = 11; i < 3; i--) {
-            int temp3 = 0;
-            temp1 = valido[temp3] * i;
+        temp3 = 0;
+        int d2 = 0;
+        for (int i = 11; i >= 2; i--) {
+            temp1 = Character.getNumericValue(valido[temp3]) * i;
             d2 += temp1;
             temp3++;
         }
-        d2 %= 11;
 
-        if ((valido[9] == d1) && (valido[10] == d2)) {
+        int r1 = d1 % 11;
+        int r2 = d2 % 11;
+
+        if ((Character.getNumericValue(valido[9]) == ((r1 < 2) ? 0 : 11 - r1))
+                && (Character.getNumericValue(valido[10]) == (((r2 < 2) ? 0 : 11 - r2)))) {
             return true;
         }
         return false;

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jirac.jirac.dtos.UsuarioLoginDto;
+import com.jirac.jirac.dtos.UsuarioMostrarDto;
 import com.jirac.jirac.entity.Usuario;
 import com.jirac.jirac.service.UsuarioService;
 
@@ -30,9 +32,9 @@ public class UsuarioController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public Usuario create(@Valid @RequestBody Usuario usuario) {
-        return usuarioService.salvar(usuario);
+    @PostMapping("/criar")
+    public UsuarioMostrarDto create(@Valid @RequestBody UsuarioLoginDto usuarioLoginDto) {
+        return usuarioService.salvar(usuarioLoginDto);
     }
 
     @GetMapping
@@ -45,11 +47,11 @@ public class UsuarioController {
         return usuarioService.buscar(id);
     }
 
-    @PutMapping("/{id}")
-    public Usuario update(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
-        usuario.setId(id);
-        return usuarioService.salvar(usuario);
-    }
+    // @PutMapping("/{id}")
+    // public Usuario update(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
+    //     usuario.setId(id);
+    //     return usuarioService.salvar(usuario);
+    // }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
