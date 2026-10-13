@@ -3,8 +3,11 @@ package com.jirac.jirac.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
 import org.springframework.stereotype.Service;
 
+import com.jirac.jirac.dtos.UsuarioEditarDto;
 import com.jirac.jirac.dtos.UsuarioLoginDto;
 import com.jirac.jirac.dtos.UsuarioMostrarDto;
 import com.jirac.jirac.entity.Usuario;
@@ -38,8 +41,10 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Optional<Usuario> buscar(Long id) {
-        return usuarioRepository.findById(id);
+    public UsuarioMostrarDto buscar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).get();
+        return new UsuarioMostrarDto(usuario.getNome(), usuario.getDataNascimento(),
+                usuario.getEmail(), usuario.getTelefone(), usuario.getCargo());
     }
 
     public void apagar(Long id) {
@@ -111,6 +116,18 @@ public class UsuarioService {
             return true;
         }
         return false;
+    }
+
+    public UsuarioMostrarDto editar(Long id, UsuarioEditarDto u) {
+        Usuario usuario = new Usuario(id, u.getNome(), u.getCpf(), u.getNascimento(), u.getEmail(),
+                u.getTelefone(),
+                u.getCargo());
+        if (validarUsuario(usuario)) {
+            usuarioRepository.save(usuario);
+            return new UsuarioMostrarDto(usuario.getNome(), usuario.getDataNascimento(),
+                    usuario.getEmail(), usuario.getTelefone(), usuario.getCargo());
+        }
+        throw new UsuarioException("Dados de usuário inválidos.");
     }
 
 }
