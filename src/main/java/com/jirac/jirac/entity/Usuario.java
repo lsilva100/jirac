@@ -33,7 +33,7 @@ public class Usuario extends Auditoria {
     private String nome;
 
     @Length(min = 11, max = 11)
-    @Pattern(regexp = "^d{11}$")
+    @Pattern(regexp = "^\\d{11}$")
     @Column(unique = true)
     private String cpf;
 
@@ -43,7 +43,7 @@ public class Usuario extends Auditoria {
     @Column(unique = true)
     private String email;
 
-    @Pattern(regexp = "^d{13}$")
+    @Pattern(regexp = "^\\d{13}$")
     @Column(unique = true)
     private String telefone;
 
