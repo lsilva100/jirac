@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jirac.jirac.dtos.AtividadeCreateRequestDTO;
+import com.jirac.jirac.dtos.AtividadeUpdateDTO;
 import com.jirac.jirac.entity.Atividade;
 import com.jirac.jirac.service.AtividadeService;
 
@@ -47,9 +48,8 @@ public class AtividadeController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @Valid @RequestBody Atividade atividade) {
-        atividade.setId(id);
-        //return atividadeService.salvar(atividade);
+    public Atividade update(@PathVariable Long id, @Valid @RequestBody AtividadeUpdateDTO atividadeUpdateDTO) {
+        return atividadeService.atualizar(id, atividadeUpdateDTO);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
