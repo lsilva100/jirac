@@ -70,7 +70,7 @@ public class AtividadeService {
         for (Field campo : camposDto) {
             campo.setAccessible(true);
             try {
-                if (campo.get(atividadeUpdateDTO) == null)
+                if (campo.get(atividadeUpdateDTO) == null || campo.get(atividadeUpdateDTO) == "")
                     continue;
                 camposParaAtualizar.put(campo.getName(), campo.get(atividadeUpdateDTO));
             }
