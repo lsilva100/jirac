@@ -68,6 +68,7 @@ public class AtividadeService {
 
         Map<String, Object> camposParaAtualizar = new HashMap<>();
         for (Field campo : camposDto) {
+            campo.setAccessible(true);
             try {
                 if (campo.get(atividadeUpdateDTO) == null)
                     continue;
