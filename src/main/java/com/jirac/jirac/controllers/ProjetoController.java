@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jirac.jirac.dtos.ProjetoCriarDto;
+import com.jirac.jirac.dtos.ProjetoMostrarDto;
 import com.jirac.jirac.entity.Projeto;
 import com.jirac.jirac.service.ProjetoService;
 
@@ -30,9 +32,9 @@ public class ProjetoController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public Projeto create(@Valid @RequestBody Projeto projeto) {
-        return projetoService.salvar(projeto);
+    @PostMapping("/criar")
+    public ProjetoMostrarDto create(@Valid @RequestBody ProjetoCriarDto projetoCriarDto) {
+        return projetoService.salvar(projetoCriarDto);
     }
 
     @GetMapping
@@ -45,16 +47,21 @@ public class ProjetoController {
         return projetoService.buscar(id);
     }
 
-    @PutMapping("/{id}")
-    public Projeto update(@PathVariable Long id, @Valid @RequestBody Projeto projeto) {
-        projeto.setId(id);
-        return projetoService.salvar(projeto);
-    }
+    // @PutMapping("/{id}")
+    // public Projeto update(@PathVariable Long id, @Valid @RequestBody Projeto projeto) {
+    //     projeto.setId(id);
+    //     return projetoService.salvar(projeto);
+    // }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         projetoService.apagar(id);
+    }
+
+    @GetMapping("/encontrarNome")
+    public Optional<Projeto> encontrarNome(String nome) {
+        return projetoService.encontrarNome(nome);
     }
 
 }
