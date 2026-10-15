@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jirac.jirac.dtos.ProjetoCriarDto;
 import com.jirac.jirac.dtos.ProjetoMostrarDto;
+import com.jirac.jirac.dtos.ProjetoUpdateDTO;
 import com.jirac.jirac.entity.Projeto;
 import com.jirac.jirac.service.ProjetoService;
 
@@ -45,6 +47,11 @@ public class ProjetoController {
     @GetMapping("/{id}")
     public Optional<Projeto> search(@PathVariable Long id) {
         return projetoService.buscar(id);
+    }
+
+    @PatchMapping("/{id}")
+    public ProjetoMostrarDto update(@PathVariable Long id, @Valid @RequestBody ProjetoUpdateDTO projetoUpdateDTO) {
+        return projetoService.atualizar(id, projetoUpdateDTO);
     }
 
     // @PutMapping("/{id}")

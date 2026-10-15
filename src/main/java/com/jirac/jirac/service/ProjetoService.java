@@ -7,8 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.jirac.jirac.dtos.ProjetoCriarDto;
 import com.jirac.jirac.dtos.ProjetoMostrarDto;
+import com.jirac.jirac.dtos.ProjetoUpdateDTO;
 import com.jirac.jirac.entity.Projeto;
-import com.jirac.jirac.enums.StatusProjeto;
+import com.jirac.jirac.entity.Usuario;
+import com.jirac.jirac.exceptions.ProjetoMustHaveUserException;
+import com.jirac.jirac.exceptions.ProjetoNotFoundException;
+import com.jirac.jirac.mappers.ProjetoMapper;
 import com.jirac.jirac.repository.ProjetoRepository;
 import com.jirac.jirac.repository.UsuarioRepository;
 
@@ -19,21 +23,33 @@ public class ProjetoService {
 
     private final ProjetoRepository projetoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final ProjetoMapper projetoMapper;
 
-    public ProjetoService(ProjetoRepository projetoRepository, UsuarioRepository usuarioRepository) {
+    public ProjetoService(ProjetoRepository projetoRepository, UsuarioRepository usuarioRepository, ProjetoMapper projetoMapper) {
         this.projetoRepository = projetoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.projetoMapper = projetoMapper;
     }
 
     @Transactional
     public ProjetoMostrarDto salvar(ProjetoCriarDto projetoCriarDto) {
-        Projeto p = new Projeto(projetoCriarDto.getNome(), projetoCriarDto.getDescricao(),
-                projetoCriarDto.getDataEncerramento(), projetoCriarDto.getPrioridade(), StatusProjeto.EM_ANDAMENTO,
-                usuarioRepository.findByEmail(projetoCriarDto.getEmailResponsavel()).get());
+        Projeto p = projetoMapper.toEntity(projetoCriarDto);
+        p.setResponsavel(usuarioRepository.findByEmail(projetoCriarDto.getEmailResponsavel()).get());
         projetoRepository.save(p);
-        return new ProjetoMostrarDto(p.getNome(), p.getDescricao(),
-                p.getDataEncerramento(), p.getPrioridade(), p.getStatus(),
-                p.getNome());
+        return projetoMapper.toMostrarDto(p);
+    }
+
+    @Transactional
+    public ProjetoMostrarDto atualizar(Long id, ProjetoUpdateDTO projetoUpdateDTO) {
+        Projeto projeto = projetoRepository.findById(id).orElseThrow(() -> new ProjetoNotFoundException(id));
+
+        if (projetoUpdateDTO.getIdResponsavel() != null) {
+            Usuario responsavel = usuarioRepository.findById(projetoUpdateDTO.getIdResponsavel()).orElseThrow(() -> new ProjetoMustHaveUserException(projetoUpdateDTO.getIdResponsavel()));
+            projeto.setResponsavel(responsavel);
+        }
+
+        projetoMapper.updateProjeto(projetoUpdateDTO, projeto);
+        return projetoMapper.toMostrarDto(projeto);
     }
 
     public List<Projeto> listar() {
