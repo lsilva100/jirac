@@ -12,23 +12,25 @@ import com.jirac.jirac.exceptions.EmailInvalidoException;
 import com.jirac.jirac.exceptions.NomeInvalidoException;
 import com.jirac.jirac.exceptions.TelefoneInvalidoException;
 import com.jirac.jirac.exceptions.UsuarioException;
+import com.jirac.jirac.exceptions.UsuarioNotFoundException;
+import com.jirac.jirac.mappers.UsuarioMapper;
 import com.jirac.jirac.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioMapper usuarioMapper;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
         this.usuarioRepository = usuarioRepository;
+        this.usuarioMapper = usuarioMapper;
     }
 
     public UsuarioMostrarDto salvar(UsuarioLoginDto u) {
-        Usuario usuario = new Usuario(u.getNome(), u.getCpf(), u.getNascimento(), u.getEmail(), u.getTelefone(),
-                u.getCargo());
+        Usuario usuario = usuarioMapper.toEntity(u);
         if (validarUsuario(usuario)) {
             usuarioRepository.save(usuario);
-            return new UsuarioMostrarDto(usuario.getNome(), usuario.getDataNascimento(),
-                    usuario.getEmail(), usuario.getTelefone(), usuario.getCargo());
+            return usuarioMapper.toMostrarDto(usuario);
         }
         throw new UsuarioException("Dados de usuário inválidos.");
     }
@@ -38,9 +40,8 @@ public class UsuarioService {
     }
 
     public UsuarioMostrarDto buscar(Long id) {
-        Usuario usuario = usuarioRepository.findById(id).get();
-        return new UsuarioMostrarDto(usuario.getNome(), usuario.getDataNascimento(),
-                usuario.getEmail(), usuario.getTelefone(), usuario.getCargo());
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException(id));
+        return usuarioMapper.toMostrarDto(usuario);
     }
 
     public void apagar(Long id) {
@@ -115,13 +116,11 @@ public class UsuarioService {
     }
 
     public UsuarioMostrarDto editar(Long id, UsuarioEditarDto u) {
-        Usuario usuario = new Usuario(id, u.getNome(), u.getCpf(), u.getNascimento(), u.getEmail(),
-                u.getTelefone(),
-                u.getCargo());
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException(id));
+        usuarioMapper.updateUsuario(u, usuario);
         if (validarUsuario(usuario)) {
             usuarioRepository.save(usuario);
-            return new UsuarioMostrarDto(usuario.getNome(), usuario.getDataNascimento(),
-                    usuario.getEmail(), usuario.getTelefone(), usuario.getCargo());
+            return usuarioMapper.toMostrarDto(usuario);
         }
         throw new UsuarioException("Dados de usuário inválidos.");
     }
