@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.jirac.jirac.dtos.AtividadeCreateRequestDTO;
 import com.jirac.jirac.dtos.AtividadeUpdateDTO;
 import com.jirac.jirac.entity.Atividade;
+import com.jirac.jirac.entity.Usuario;
 import com.jirac.jirac.mappers.AtividadeMapper;
 import com.jirac.jirac.repository.AtividadeRepository;
 import com.jirac.jirac.repository.ProjetoRepository;
@@ -64,34 +65,12 @@ public class AtividadeService {
     {
         Atividade atividade = atividadeRepository.findById(idAtividade).orElseThrow(() -> new AtividadeNotFoundException(idAtividade));
 
-        Field[] camposDto = AtividadeUpdateDTO.class.getDeclaredFields();
-
-        Map<String, Object> camposParaAtualizar = new HashMap<>();
-        for (Field campo : camposDto) {
-            campo.setAccessible(true);
-            try {
-                if (campo.get(atividadeUpdateDTO) == null || campo.get(atividadeUpdateDTO) == "")
-                    continue;
-                camposParaAtualizar.put(campo.getName(), campo.get(atividadeUpdateDTO));
-            }
-            catch (IllegalAccessException ex){
-                continue;
-            }
+        if (atividadeUpdateDTO.getIdResponsavel() != null) {
+            Usuario responsavel = usuarioRepository.findById(atividadeUpdateDTO.getIdResponsavel()).orElseThrow(() -> new AtividadeMustHaveUserException(atividadeUpdateDTO.getIdResponsavel()));
+            atividade.setResponsavel(responsavel);
         }
 
-        for (Map.Entry<String, Object> campo : camposParaAtualizar.entrySet()) {
-            String propName = campo.getKey();
-            Object newValue = campo.getValue();
-
-            try {
-                Field atividadeCampo = atividade.getClass().getDeclaredField(propName);
-                atividadeCampo.setAccessible(true);
-                atividadeCampo.set(atividade, newValue);
-            }
-            catch (NoSuchFieldException | IllegalAccessException ex){
-                continue;
-            }
-        }
+        atividadeMapper.updateAtividade(atividadeUpdateDTO, atividade);
         return atividade;
             
     }
