@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jirac.jirac.dtos.AtividadeCreateRequestDTO;
+import com.jirac.jirac.dtos.AtividadeMostrarDto;
 import com.jirac.jirac.dtos.AtividadeUpdateDTO;
 import com.jirac.jirac.entity.Atividade;
 import com.jirac.jirac.service.AtividadeService;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/v1/atividades")
@@ -35,7 +35,7 @@ public class AtividadeController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping()
     public Atividade create(@Valid @RequestBody AtividadeCreateRequestDTO atividadeDTO) {
         return atividadeService.salvar(atividadeDTO);
     }
@@ -49,7 +49,11 @@ public class AtividadeController {
     public Optional<List<Atividade>> listarEmAtraso() {
         return atividadeService.listarEmAtraso();
     }
-    
+
+    @GetMapping("/finalizadas")
+    public List<AtividadeMostrarDto> listarFinalizadas() {
+        return atividadeService.listarFinalizado();
+    }
 
     @GetMapping("/{id}")
     public Optional<Atividade> search(@PathVariable Long id) {

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.jirac.jirac.dtos.AtividadeCreateRequestDTO;
+import com.jirac.jirac.dtos.AtividadeMostrarDto;
 import com.jirac.jirac.dtos.AtividadeUpdateDTO;
 import com.jirac.jirac.entity.Atividade;
 import com.jirac.jirac.entity.Usuario;
@@ -55,9 +56,16 @@ public class AtividadeService {
     }
 
     public Optional<List<Atividade>> listarEmAtraso() {
-
         return atividadeRepository.findAtrasado();
     
+    }
+
+    public List<AtividadeMostrarDto> listarFinalizado() {
+        List<AtividadeMostrarDto> atividades= atividadeMapper.toDtoList(atividadeRepository.findFinalizado());
+        if (atividades.size() < 1) {
+            throw new SemAtividadesFinalizadasException();
+        } 
+        return atividades;
     }
 
     public Optional<Atividade> buscar(Long id) {

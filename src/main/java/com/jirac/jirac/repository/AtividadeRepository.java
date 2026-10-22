@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.jirac.jirac.entity.Atividade;
 import com.jirac.jirac.entity.Projeto;
-import com.jirac.jirac.enums.StatusProjeto;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,5 +17,5 @@ public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
     Optional<List<Atividade>> findAtrasado();
 
     @Query(value = "SELECT * FROM atividade WHERE status = 3 ", nativeQuery = true)
-    Optional<Atividade> findFinalizado(StatusProjeto statusProjeto);
+    List<Atividade> findFinalizado();
 }

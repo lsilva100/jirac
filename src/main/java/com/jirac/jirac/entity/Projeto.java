@@ -10,6 +10,7 @@ import com.jirac.jirac.enums.Prioridade;
 import com.jirac.jirac.enums.StatusProjeto;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +34,7 @@ public class Projeto extends Auditoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String nome;
 
     private String descricao;
