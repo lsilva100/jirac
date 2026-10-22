@@ -30,6 +30,7 @@ public class Usuario extends Auditoria {
     private Long id;
 
     @Length(min = 3, max = 100)
+    @Column(unique = true)
     private String nome;
 
     @Length(min = 11, max = 11)
