@@ -21,6 +21,8 @@ import com.jirac.jirac.entity.Atividade;
 import com.jirac.jirac.service.AtividadeService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/v1/atividades")
@@ -42,6 +44,12 @@ public class AtividadeController {
     public List<Atividade> list() {
         return atividadeService.listar();
     }
+
+    @GetMapping("/emAtraso")
+    public Optional<List<Atividade>> listarEmAtraso() {
+        return atividadeService.listarEmAtraso();
+    }
+    
 
     @GetMapping("/{id}")
     public Optional<Atividade> search(@PathVariable Long id) {

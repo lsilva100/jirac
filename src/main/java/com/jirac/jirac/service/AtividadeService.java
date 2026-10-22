@@ -37,6 +37,7 @@ public class AtividadeService {
     private final AtividadeMapper atividadeMapper;
 
 
+    @Transactional 
     public Atividade salvar(AtividadeCreateRequestDTO atividadeCreateRequestDTO) {
         
         Long idProjeto = atividadeCreateRequestDTO.getIdProjeto();
@@ -51,6 +52,12 @@ public class AtividadeService {
 
     public List<Atividade> listar() {
         return atividadeRepository.findAll();
+    }
+
+    public Optional<List<Atividade>> listarEmAtraso() {
+
+        return atividadeRepository.findAtrasado();
+    
     }
 
     public Optional<Atividade> buscar(Long id) {
