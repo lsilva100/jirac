@@ -46,7 +46,7 @@ public class AtividadeController {
     }
 
     @GetMapping("/emAtraso")
-    public Optional<List<Atividade>> listarEmAtraso() {
+    public List<AtividadeMostrarDto> listarEmAtraso() {
         return atividadeService.listarEmAtraso();
     }
 

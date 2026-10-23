@@ -14,7 +14,7 @@ public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
     Optional<Atividade> findByProjeto(Projeto projeto);
 
     @Query(value = "SELECT * FROM atividade WHERE status = 4 ", nativeQuery = true)
-    Optional<List<Atividade>> findAtrasado();
+    List<Atividade> findAtrasado();
 
     @Query(value = "SELECT * FROM atividade WHERE status = 3 ", nativeQuery = true)
     List<Atividade> findFinalizado();

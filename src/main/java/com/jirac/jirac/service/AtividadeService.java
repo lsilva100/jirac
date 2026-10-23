@@ -55,8 +55,12 @@ public class AtividadeService {
         return atividadeRepository.findAll();
     }
 
-    public Optional<List<Atividade>> listarEmAtraso() {
-        return atividadeRepository.findAtrasado();
+    public List<AtividadeMostrarDto> listarEmAtraso() {
+        List<AtividadeMostrarDto> atividades= atividadeMapper.toDtoList(atividadeRepository.findAtrasado());
+        if (atividades.size() < 1) {
+            throw new SemAtividadesAtrasadasException();
+        } 
+        return atividades;
     
     }
 
