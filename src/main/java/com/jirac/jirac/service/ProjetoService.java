@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import com.jirac.jirac.dtos.ProjetoCriarDto;
 import com.jirac.jirac.dtos.ProjetoMostrarDto;
 import com.jirac.jirac.dtos.ProjetoUpdateDTO;
+import com.jirac.jirac.entity.Atividade;
 import com.jirac.jirac.entity.Projeto;
 import com.jirac.jirac.entity.Usuario;
+import com.jirac.jirac.enums.StatusProjeto;
+import com.jirac.jirac.exceptions.ProjetoComAtividadesException;
 import com.jirac.jirac.exceptions.ProjetoMustHaveUserException;
 import com.jirac.jirac.exceptions.ProjetoNotFoundException;
 import com.jirac.jirac.mappers.ProjetoMapper;
@@ -25,7 +28,8 @@ public class ProjetoService {
     private final UsuarioRepository usuarioRepository;
     private final ProjetoMapper projetoMapper;
 
-    public ProjetoService(ProjetoRepository projetoRepository, UsuarioRepository usuarioRepository, ProjetoMapper projetoMapper) {
+    public ProjetoService(ProjetoRepository projetoRepository, UsuarioRepository usuarioRepository,
+            ProjetoMapper projetoMapper) {
         this.projetoRepository = projetoRepository;
         this.usuarioRepository = usuarioRepository;
         this.projetoMapper = projetoMapper;
@@ -44,7 +48,8 @@ public class ProjetoService {
         Projeto projeto = projetoRepository.findById(id).orElseThrow(() -> new ProjetoNotFoundException(id));
 
         if (projetoUpdateDTO.getIdResponsavel() != null) {
-            Usuario responsavel = usuarioRepository.findById(projetoUpdateDTO.getIdResponsavel()).orElseThrow(() -> new ProjetoMustHaveUserException(projetoUpdateDTO.getIdResponsavel()));
+            Usuario responsavel = usuarioRepository.findById(projetoUpdateDTO.getIdResponsavel())
+                    .orElseThrow(() -> new ProjetoMustHaveUserException(projetoUpdateDTO.getIdResponsavel()));
             projeto.setResponsavel(responsavel);
         }
 
@@ -61,6 +66,12 @@ public class ProjetoService {
     }
 
     public void apagar(Long id) {
+        List<Atividade> atividades = projetoRepository.findById(id).get().getAtividades();
+        for (Atividade a : atividades) {
+            if (!a.getStatus().equals(StatusProjeto.FINALIZADO)) {
+                throw new ProjetoComAtividadesException(id);
+            }
+        }
         projetoRepository.deleteById(id);
     }
 
