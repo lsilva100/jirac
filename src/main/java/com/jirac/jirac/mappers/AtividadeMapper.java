@@ -10,6 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import com.jirac.jirac.dtos.AtividadeCreateRequestDTO;
 import com.jirac.jirac.dtos.AtividadeMostrarDto;
+import com.jirac.jirac.dtos.AtividadeNoProjetoMostrarDto;
 import com.jirac.jirac.dtos.AtividadeUpdateDTO;
 import com.jirac.jirac.entity.Atividade;
 
@@ -35,5 +36,10 @@ public interface AtividadeMapper {
     @Mapping(source = "projeto.nome", target = "nomeProjeto")
     @Mapping(source = "projeto.descricao", target = "descricaoProjeto")
     List<AtividadeMostrarDto> toDtoList(List<Atividade> atividades);
+
+    
+    AtividadeNoProjetoMostrarDto paraDtoProjeto(Atividade atividade);
+
+    List<AtividadeNoProjetoMostrarDto> paraDtoProjetoLista(List<Atividade> atividade);
 
 }

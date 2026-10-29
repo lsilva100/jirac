@@ -1,6 +1,7 @@
 package com.jirac.jirac.dtos;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.jirac.jirac.enums.Prioridade;
 import com.jirac.jirac.enums.StatusProjeto;
@@ -21,4 +22,5 @@ public class ProjetoMostrarDto {
     private Prioridade prioridade;
     private StatusProjeto status;
     private String emailResponsavel;
+    private List<AtividadeNoProjetoMostrarDto> atividades;
 }

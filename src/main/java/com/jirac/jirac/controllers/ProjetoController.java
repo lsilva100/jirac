@@ -40,12 +40,12 @@ public class ProjetoController {
     }
 
     @GetMapping
-    public List<Projeto> list() {
+    public List<ProjetoMostrarDto> list() {
         return projetoService.listar();
     }
 
     @GetMapping("/{id}")
-    public Optional<Projeto> search(@PathVariable Long id) {
+    public ProjetoMostrarDto search(@PathVariable Long id) {
         return projetoService.buscar(id);
     }
 
@@ -55,9 +55,10 @@ public class ProjetoController {
     }
 
     // @PutMapping("/{id}")
-    // public Projeto update(@PathVariable Long id, @Valid @RequestBody Projeto projeto) {
-    //     projeto.setId(id);
-    //     return projetoService.salvar(projeto);
+    // public Projeto update(@PathVariable Long id, @Valid @RequestBody Projeto
+    // projeto) {
+    // projeto.setId(id);
+    // return projetoService.salvar(projeto);
     // }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

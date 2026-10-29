@@ -57,12 +57,12 @@ public class ProjetoService {
         return projetoMapper.toMostrarDto(projeto);
     }
 
-    public List<Projeto> listar() {
-        return projetoRepository.findAll();
+    public List<ProjetoMostrarDto> listar() {
+        return projetoMapper.toDtoList(projetoRepository.findAll());
     }
 
-    public Optional<Projeto> buscar(Long id) {
-        return projetoRepository.findById(id);
+    public ProjetoMostrarDto buscar(Long id) {
+        return projetoMapper.toMostrarDto(projetoRepository.findById(id).get());
     }
 
     public void apagar(Long id) {
