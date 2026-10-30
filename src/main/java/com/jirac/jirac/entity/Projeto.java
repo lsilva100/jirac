@@ -10,6 +10,7 @@ import com.jirac.jirac.enums.Prioridade;
 import com.jirac.jirac.enums.StatusProjeto;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,7 +51,7 @@ public class Projeto extends Auditoria {
     @ManyToOne
     private Usuario responsavel;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projeto", cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnore
     @Nullable
     private List<Atividade> atividades;
